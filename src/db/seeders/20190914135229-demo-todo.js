@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    const demoTodos = [1,2,3,4,5].map((num) => {
+    const demoTodos = [1, 2, 3, 4, 5].map((num) => {
       return {
         title: `demo title ${num}`,
         body: `I willl show demo in meetup ${num}`,
