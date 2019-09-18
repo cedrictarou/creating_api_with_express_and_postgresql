@@ -5,13 +5,11 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/api.controller');
 
-router.route('/todos')
+router.route('/')
   .get(controller.getTodos)
   .post(controller.postTodo)
-  .put(controller.putTodo)
-  .delete(controller.deleteTodo);
 
-router.route('/todos/:id')
+router.route('/:id')
   .put(controller.putTodo)
   .delete(controller.deleteTodo);
 
