@@ -1,12 +1,22 @@
 // それぞれのリクエストの実行内容
 
 'use strict'
+const Todo = require('../models/index').Todo;
 
 module.exports = {
   // Read
-  getTodos: (req, res) => {
-    res.status(200).send("get todos from db");
+  async getTodos(req, res) {
+    const todos = await Todo.findAll({
+      order: [
+        ['id', 'ASC']
+      ],
+      raw: true
+    });
+
+    res.status(200).send(todos);
   },
+
+
   // Create
   postTodo: (req, res) => {
     res.status(200).send("add todos to db");
