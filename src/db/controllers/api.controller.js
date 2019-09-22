@@ -13,7 +13,7 @@ module.exports = {
       raw: true
     });
 
-    res.status(200).send(todos);
+    res.status(200).json(todos);
   },
 
 
