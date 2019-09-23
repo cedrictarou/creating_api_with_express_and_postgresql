@@ -18,4 +18,22 @@ app.use('/api/todos', [
   apiRouter
 ]);
 
+// endPointミス
+app.use(function(req, res, next) {
+  const err = new Error(
+    `${req.originalUrl}のサーバーの IP アドレスが見つかりませんでした。`
+  );
+  err.status = 404;
+  next(err);
+});
+
+// エラーハンドリング
+app.use(function(err, req, res, next) {
+  return res.status(err.status || 500).json({
+    error: {
+      message: err.message || 'oops! something went wrong!',
+    },
+  });
+});
+
 module.exports = app;

@@ -12,7 +12,6 @@ module.exports = {
       ],
       raw: true
     });
-
     res.status(200).json(todos);
   },
 

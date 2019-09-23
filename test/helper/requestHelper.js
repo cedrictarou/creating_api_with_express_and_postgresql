@@ -3,8 +3,7 @@ const app = require('../../src/server');
 
 module.exports = {
   request: ({ method, endPoint, statusCode }) => {
-    return request(app)
-      [method](endPoint)
+    return request(app)[method](endPoint)
       .set('Accept', 'application/json')
       .expect('Content-Type', /application\/json/)
       .expect(statusCode);
