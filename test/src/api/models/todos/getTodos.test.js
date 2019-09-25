@@ -14,8 +14,8 @@ describe('test get/api/todos', () => {
     }
   });
   after(async () => {
-    await sequelize.truncate();
-    await sequelize.close();
+    // await sequelize.truncate();
+    // await sequelize.close();
   });
  
   it('returns todos in response.body', async() => {
