@@ -13,27 +13,25 @@ describe('test POST /api/todos', () => {
       title: 'テストタイトル',
       body: 'テスト文',
     };
-    console.log(testData, '@@@@@@@@@@@@@@@@');
 
     const response = await requestHelper.request({
         method: 'post',
         endPoint: '/api/todos',
         statusCode: 200,
       }).send(testData);
-      console.log(response.body, '@@@@@@@@@@@@@@@@');
       
-//     const createdTodo = response.body;
-//     assert.deepStrictEqual(
-//       { ...createdTodo },
-//       {
-//         id: createdTodo.id,
-//         title: testData.title,
-//         body: testData.body,
-//         completed: createdTodo.completed,
-//         createdAt: createdTodo.createdAt,
-//         updatedAt: createdTodo.updatedAt,
-//       }
-//     );
+    const createdTodo = response.body;
+    assert.deepStrictEqual(
+      { ...createdTodo },
+      {
+        id: createdTodo.id,
+        title: testData.title,
+        body: testData.body,
+        completed: createdTodo.completed,
+        createdAt: createdTodo.createdAt,
+        updatedAt: createdTodo.updatedAt,
+      }
+    );
   });
 });
 
