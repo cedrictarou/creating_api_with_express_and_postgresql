@@ -1,6 +1,6 @@
 const assert = require('power-assert');
 const requestHelper = require('../../../../helper/requestHelper');
-const { Todo, sequelize } = require('../../../../../src/db/models/index');
+const { sequelize } = require('../../../../../src/db/models/index');
  
 describe('test POST /api/todos', () => {
   after(async () => {
@@ -33,14 +33,54 @@ describe('test POST /api/todos', () => {
       }
     );
   });
-});
 
-describe('test POST /api/===', () => {
-  it('response 404 json', async () => {
-    await requestHelper.request({
-      method: 'post',
-      endPoint: '/api/===',
-      statusCode: 404,
+  it('returns null title is 400 error', async () => {
+    const testData = {
+      body: 'test body',
+    };
+    const { body, status } = await requestHelper
+      .request({
+        method: 'post',
+        endPoint: '/api/todos',
+        statusCode: 400,
+      }).send(testData);
+      assert.equal(status, 400);
+      assert.equal(typeof body, 'object');
+      assert.equal(
+        body.error.message,
+        'null value in column "title" violates not-null constraint'
+      );
+  });
+
+  it('returns null body is 400 error', async () => {
+    const testData = {
+      title: 'test title',
+    };
+    const { body, status } = await requestHelper
+      .request({
+        method: 'post',
+        endPoint: '/api/todos',
+        statusCode: 400,
+      }).send(testData);
+      assert.equal(status, 400);
+      assert.equal(typeof body, 'object');
+      assert.equal(
+        body.error.message,
+        'null value in column "body" violates not-null constraint'
+      );
+  });
+
+  describe('test POST /api/===', () => {
+    it('response 404 json', async () => {
+      const { body, status } = await requestHelper.request({
+        method: 'post',
+        endPoint: '/api/===',
+        statusCode: 404,
+      });
+  
+      assert.equal(status, 404);
+      assert.equal(typeof body, 'object');
+      assert.equal(body.error.message,'/api/===のサーバーの IP アドレスが見つかりませんでした。');
     });
   });
 });

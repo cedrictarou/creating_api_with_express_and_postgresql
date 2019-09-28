@@ -2,6 +2,11 @@
 
 'use strict'
 const models = require('../models/index');
+const STATUS_CODES = {
+  OK: 200,
+  BAD_REQUEST: 400,
+  NOT_FOUND: 404,
+};
 
 module.exports = {
   // Read 
@@ -12,11 +17,11 @@ module.exports = {
       ],
       raw: true
     });
-    res.status(200).json(storedTodos);
+    res.status(STATUS_CODES.OK).json(storedTodos);
   },
 
   // Create
-  async postTodo(req, res) {
+  async postTodo(req, res, next) {
     let transaction;
     try {
       transaction = await models.sequelize.transaction();
@@ -26,9 +31,11 @@ module.exports = {
       }, { transaction });
 
       await transaction.commit();
-      res.status(200).json(createdTodo);
+      res.status(STATUS_CODES.OK).json(createdTodo);
     } catch (error) {
-      res.status(404).json({message: error.message});
+      await transaction.rollback();
+      error.status = STATUS_CODES.BAD_REQUEST;
+      next(error);
     }
   },
   
@@ -36,12 +43,12 @@ module.exports = {
   putTodo: (req, res) =>{
     const id = req.params.id;
     const message = `update todo of ${id} in db`;
-    res.status(200).send(message);
+    res.status(STATUS_CODES.OK).send(message);
   },
   // Delete
   deleteTodo: (req, res) =>{
     const id = req.params.id;
     const message = `delete todo of ${id} from db`;
-    res.status(200).send(message);
+    res.status(STATUS_CODES.OK).send(message);
   }
 };
