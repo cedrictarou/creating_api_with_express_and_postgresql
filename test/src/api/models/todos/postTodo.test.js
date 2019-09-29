@@ -1,7 +1,6 @@
 const assert = require('power-assert');
 const requestHelper = require('../../../../helper/requestHelper');
 const { sequelize } = require('../../../../../src/db/models/index');
-// const app = require('../../../../../src/server');
 
 describe('test POST /api/todos', () => {
   after(async () => {
@@ -49,7 +48,7 @@ describe('test POST /api/todos', () => {
       assert.equal(typeof body, 'object');
       assert.equal(
         body.error.message,
-        '見入力の値があります。'
+        '未入力の値があります。'
       );
   });
 
@@ -67,7 +66,7 @@ describe('test POST /api/todos', () => {
       assert.equal(typeof body, 'object');
       assert.equal(
         body.error.message,
-        '見入力の値があります。'
+        '未入力の値があります。'
       );
   });
 
