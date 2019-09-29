@@ -1,7 +1,8 @@
 const assert = require('power-assert');
 const requestHelper = require('../../../../helper/requestHelper');
 const { sequelize } = require('../../../../../src/db/models/index');
- 
+const app = require('../../../../../src/server');
+
 describe('test POST /api/todos', () => {
   after(async () => {
     await sequelize.truncate();
@@ -47,8 +48,9 @@ describe('test POST /api/todos', () => {
       assert.equal(status, 400);
       assert.equal(typeof body, 'object');
       assert.equal(
+        // ここにserver.jsのエラーメッセージが表示されるようにしたい。
         body.error.message,
-        'null value in column "title" violates not-null constraint'
+        app.err.error[message]
       );
   });
 
