@@ -5,7 +5,6 @@ const { sequelize } = require('../../../../../src/db/models/index');
 describe('test POST /api/todos', () => {
   after(async () => {
     await sequelize.truncate();
-    await sequelize.close();
   });
 
   it('returns response.body', async () => {
