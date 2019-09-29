@@ -35,6 +35,7 @@ module.exports = {
     } catch (error) {
       await transaction.rollback();
       error.status = STATUS_CODES.BAD_REQUEST;
+      error.message = '見入力の値があります。';
       next(error);
     }
   },
