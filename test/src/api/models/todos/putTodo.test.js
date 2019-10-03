@@ -10,12 +10,12 @@ describe('test PUT /api/todos/:id', () => {
         title: `テストタイトル${i + 1}`,
         body: `テスト文${i + 1}`,
       };
-      await Todo.create(testData);
+      const createdTestTodo = await Todo.create(testData);
+      await Promise.all([createdTestTodo]);
     }
   });
   after(async () => {
     await sequelize.truncate();
-    await sequelize.close();
   });
 
   it('returns response.body', async () => {
@@ -26,7 +26,6 @@ describe('test PUT /api/todos/:id', () => {
       statusCode: 200,
     });
     const oldTodos = response.body;
-    console.log(oldTodos, '2@@@@@@@@@@@@@@@@');
     // oldTodoのそれぞれのプロパティをupdateする
     const updateTodos = oldTodos.map((todo, i) => {
       const putData = {
@@ -40,8 +39,8 @@ describe('test PUT /api/todos/:id', () => {
           statusCode: 200,
         }).send(putData);
     });
-    const newTodos = await Promise.all(updateTodos);
-    newTodos.forEach(({ body }) => {
+    const updatedTodos = await Promise.all(updateTodos);
+    updatedTodos.forEach(({ body }) => {
       assert.deepStrictEqual(
         { ...body },
         {
