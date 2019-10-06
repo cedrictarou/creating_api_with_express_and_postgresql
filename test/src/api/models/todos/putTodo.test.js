@@ -11,7 +11,7 @@ describe('test PUT /api/todos/:id', () => {
         title: `テストタイトル${i + 1}`,
         body: `テスト文${i + 1}`,
       };
-      const testTodo = await Todo.create(testData);
+      const testTodo = Todo.create(testData);
       testTodos.push(testTodo);
     }
     await Promise.all(testTodos);
