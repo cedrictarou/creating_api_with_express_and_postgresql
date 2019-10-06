@@ -5,14 +5,16 @@ const { Todo, sequelize } = require('../../../../../src/db/models/index');
 const INVALID_ID = 99999999999;
 describe('test PUT /api/todos/:id', () => {
   before(async () => {
+    const testTodos = [];
     for (let i = 0; i < 5; i++) {
       const testData = {
         title: `テストタイトル${i + 1}`,
         body: `テスト文${i + 1}`,
       };
-      const createdTestTodo = await Todo.create(testData);
-      await Promise.all([createdTestTodo]);
+      const testTodo = await Todo.create(testData);
+      testTodos.push(testTodo);
     }
+    await Promise.all(testTodos);
   });
   after(async () => {
     await sequelize.truncate();
