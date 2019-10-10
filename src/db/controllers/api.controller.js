@@ -79,9 +79,38 @@ module.exports = {
   },
 
   // Delete
-  deleteTodo: (req, res) =>{
-    const id = req.params.id;
-    const message = `delete todo of ${id} from db`;
-    res.status(STATUS_CODES.OK).send(message);
+  async deleteTodo(req, res, next){
+    let transaction;
+    try{
+      const parsedId = parseInt(req.params.id, 10);
+      //idが1未満やないときのエラー
+      if (parsedId < 1 || isNaN(parsedId)) {
+        const error = new Error('idは必須です(1以上の数値)');
+        error.status = STATUS_CODES.BAD_REQUEST;
+        return next(error);
+      }
+      transaction = await models.sequelize.transaction();
+      const todo = await models.Todo.findByPk(parsedId, { transaction });
+      // todoがないときエラーを返す
+      if (!todo) {
+        const error = new Error(`Couldn't find a todo of ID ${parsedId}`);
+        error.status = STATUS_CODES.NOT_FOUND;
+        throw error;
+      }
+      // 正常な処理
+      await todo.destroy({ transaction });
+      await transaction.commit();
+      res.status(STATUS_CODES.OK).json(todo.dataValues);
+    } catch(error) {
+      await transaction.rollback();
+      if (!error.status) {
+        error.status = STATUS_CODES.BAD_REQUEST;
+      }
+      next(error);
+    }
+    // 処理後のメッセージ
+    // const id = req.params.id;
+    // const message = `delete todo of ${id} from db`;
+    // res.status(STATUS_CODES.OK).json(message);
   }
 };
