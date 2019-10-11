@@ -60,7 +60,7 @@ describe('test DELETE /api/todos/:id', () => {
       assert.deepStrictEqual(body.updatedAt, oldTodo.updatedAt);
     });
   });
-  
+  console.log('@@@@@@@@@@@@@@@@@@@@@@', endPoints);
   it('is completed?', async () => {
     const endPointIdList = [];
     const promises = endPoints.map(endPoint => {
@@ -73,11 +73,11 @@ describe('test DELETE /api/todos/:id', () => {
       });
     });
     
-    const response = await Promise.all(promises);
-    response.forEach(({ body, status }, i) => {
-      assert.equal(status, 404);
-      assert.equal(typeof body, 'object');
-      assert.equal(
+    const responseList = await Promise.all(promises);
+    responseList.forEach(({ body, status }, i) => {
+      assert.strictEqual(status, 404);
+      assert.strictEqual(typeof body, 'object');
+      assert.strictEqual(
         body.error.message,
         `Couldn't find a todo of ID ${endPointIdList[i]}`
       );
@@ -91,9 +91,9 @@ describe('test DELETE /api/todos/:id', () => {
       statusCode: 400,
     });
 
-    assert.equal(status, 400);
-    assert.equal(typeof body, 'object');
-    assert.equal(
+    assert.strictEqual(status, 400);
+    assert.strictEqual(typeof body, 'object');
+    assert.strictEqual(
       body.error.message, 'idは必須です(1以上の数値)'
     );
   });
@@ -106,9 +106,9 @@ describe('test DELETE /api/todos/:id', () => {
         statusCode: 404,
       });
 
-    assert.equal(status, 404);
-    assert.equal(typeof body, 'object');
-    assert.equal(
+    assert.strictEqual(status, 404);
+    assert.strictEqual(typeof body, 'object');
+    assert.strictEqual(
       body.error.message,
       `Couldn't find a todo of ID ${INVALID_ID}`
     );
@@ -123,9 +123,9 @@ describe('test DELETE /api/todos', () => {
       statusCode: 404,
     });
 
-    assert.equal(status, 404);
-    assert.equal(typeof body, 'object');
-    assert.equal(
+    assert.strictEqual(status, 404);
+    assert.strictEqual(typeof body, 'object');
+    assert.strictEqual(
       body.error.message,
       '/api/todosのサーバーの IP アドレスが見つかりませんでした。'
     );

@@ -87,7 +87,7 @@ module.exports = {
       if (parsedId < 1 || isNaN(parsedId)) {
         const error = new Error('idは必須です(1以上の数値)');
         error.status = STATUS_CODES.BAD_REQUEST;
-        return next(error);
+        next(error);
       }
       transaction = await models.sequelize.transaction();
       const todo = await models.Todo.findByPk(parsedId, { transaction });
@@ -95,7 +95,7 @@ module.exports = {
       if (!todo) {
         const error = new Error(`Couldn't find a todo of ID ${parsedId}`);
         error.status = STATUS_CODES.NOT_FOUND;
-        throw error;
+        next(error);
       }
       // 正常な処理
       await todo.destroy({ transaction });
@@ -108,9 +108,5 @@ module.exports = {
       }
       next(error);
     }
-    // 処理後のメッセージ
-    // const id = req.params.id;
-    // const message = `delete todo of ${id} from db`;
-    // res.status(STATUS_CODES.OK).json(message);
   }
 };
