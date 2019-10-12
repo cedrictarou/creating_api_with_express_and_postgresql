@@ -5,7 +5,7 @@ const { Todo, sequelize } = require('../../../../../src/db/models/index');
 const INVALID_ID = 99999999999;
 const endPoints = [];
 const END_POINT_PREFIX = '/api/todos';
-
+const idList = [];
 describe('test DELETE /api/todos/:id', () => {
   before(async () => {
     const testTodos = [];
@@ -22,7 +22,6 @@ describe('test DELETE /api/todos/:id', () => {
   after(async () => {
     await sequelize.truncate();
   });
-  
   it('returns response.body', async () => {
     // old
     const response = await requestHelper.request({
@@ -31,9 +30,16 @@ describe('test DELETE /api/todos/:id', () => {
       statusCode: 200,
     });
     const oldTodos = response.body;
-
+    
+    //削除するidを取得してidListに追加する
+    ids = oldTodos.map((obj) => obj.id);
+    ids.forEach((id) => {
+      idList.push(id);
+    });
+    
     // delete
-    const promises = oldTodos.map(({id}) => {
+    // const promises = oldTodos.map(({id}) => {
+    const promises = idList.map((id) => {
       const endPoint = `${END_POINT_PREFIX}/${id}`;
       endPoints.push(endPoint);
       return requestHelper.request({
@@ -42,6 +48,8 @@ describe('test DELETE /api/todos/:id', () => {
         statusCode: 200,
       });
     });
+
+
     const deletedResponse = await Promise.all(promises);
     deletedResponse.forEach(( { body } ) => {
       assert.deepStrictEqual(
@@ -63,12 +71,11 @@ describe('test DELETE /api/todos/:id', () => {
       assert.deepStrictEqual(body.updatedAt, oldTodo.updatedAt);
     });
   });
-  it('is completed?', async () => {
 
-    const endPointIdList = [];
-    const promises = endPoints.map(endPoint => {
-      const apiTodosAfterId = endPoint.substring(11);
-      endPointIdList.push(apiTodosAfterId);
+ it( 'is completed?', async () => {
+    const promises = idList.map((id) => {
+      const endPoint = `${END_POINT_PREFIX}/${id}`;
+      endPoints.push(endPoint);
       return requestHelper.request({
         method: 'delete',
         endPoint,
@@ -82,7 +89,7 @@ describe('test DELETE /api/todos/:id', () => {
       assert.strictEqual(typeof body, 'object');
       assert.strictEqual(
         body.error.message,
-        `Couldn't find a todo of ID ${endPointIdList[i]}`
+        `Couldn't find a todo of ID ${idList[i]}`
       );
     });
   });

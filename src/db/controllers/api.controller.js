@@ -106,7 +106,7 @@ module.exports = {
       if (!error.status) {
         error.status = STATUS_CODES.BAD_REQUEST;
       }
-      return next(error);
+      next(error);
     }
   }
 };
