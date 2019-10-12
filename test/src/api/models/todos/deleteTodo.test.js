@@ -4,6 +4,8 @@ const { Todo, sequelize } = require('../../../../../src/db/models/index');
 
 const INVALID_ID = 99999999999;
 const endPoints = [];
+const END_POINT_PREFIX = '/api/todos';
+
 describe('test DELETE /api/todos/:id', () => {
   before(async () => {
     const testTodos = [];
@@ -25,13 +27,14 @@ describe('test DELETE /api/todos/:id', () => {
     // old
     const response = await requestHelper.request({
       method: 'get',
-      endPoint: '/api/todos',
+      endPoint: END_POINT_PREFIX,
       statusCode: 200,
     });
     const oldTodos = response.body;
+
     // delete
     const promises = oldTodos.map(({id}) => {
-      const endPoint = `/api/todos/${id}`;
+      const endPoint = `${END_POINT_PREFIX}/${id}`;
       endPoints.push(endPoint);
       return requestHelper.request({
         method: 'delete',
@@ -60,8 +63,8 @@ describe('test DELETE /api/todos/:id', () => {
       assert.deepStrictEqual(body.updatedAt, oldTodo.updatedAt);
     });
   });
-  console.log('@@@@@@@@@@@@@@@@@@@@@@', endPoints);
   it('is completed?', async () => {
+
     const endPointIdList = [];
     const promises = endPoints.map(endPoint => {
       const apiTodosAfterId = endPoint.substring(11);
@@ -87,7 +90,7 @@ describe('test DELETE /api/todos/:id', () => {
   it('return ID is required', async () => {
     const { body, status } = await requestHelper.request({
       method: 'delete',
-      endPoint: `/api/todos/-10`,
+      endPoint: `${END_POINT_PREFIX}/-10`,
       statusCode: 400,
     });
 
@@ -102,7 +105,7 @@ describe('test DELETE /api/todos/:id', () => {
     const { body, status } = await requestHelper
       .request({
         method: 'delete',
-        endPoint: `/api/todos/${INVALID_ID}`,
+        endPoint: `${END_POINT_PREFIX}/${INVALID_ID}`,
         statusCode: 404,
       });
 
@@ -119,7 +122,7 @@ describe('test DELETE /api/todos', () => {
   it('response 404 json', async () => {
     const { body, status } = await requestHelper.request({
       method: 'delete',
-      endPoint: '/api/todos',
+      endPoint: END_POINT_PREFIX,
       statusCode: 404,
     });
 
