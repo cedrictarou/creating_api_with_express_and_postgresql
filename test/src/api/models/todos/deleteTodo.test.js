@@ -32,23 +32,19 @@ describe('test DELETE /api/todos/:id', () => {
     const oldTodos = response.body;
     
     //削除するidを取得してidListに追加する
-    ids = oldTodos.map((obj) => obj.id);
-    ids.forEach((id) => {
-      idList.push(id);
+    oldTodos.forEach((obj) => {
+      idList.push(obj.id);
     });
     
     // delete
-    // const promises = oldTodos.map(({id}) => {
     const promises = idList.map((id) => {
       const endPoint = `${END_POINT_PREFIX}/${id}`;
-      endPoints.push(endPoint);
       return requestHelper.request({
         method: 'delete',
         endPoint,
         statusCode: 200,
       });
     });
-
 
     const deletedResponse = await Promise.all(promises);
     deletedResponse.forEach(( { body } ) => {
