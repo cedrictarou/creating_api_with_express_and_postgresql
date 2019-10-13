@@ -3,7 +3,6 @@ const requestHelper = require('../../../../helper/requestHelper');
 const { Todo, sequelize } = require('../../../../../src/db/models/index');
 
 const INVALID_ID = 99999999999;
-const endPoints = [];
 const END_POINT_PREFIX = '/api/todos';
 const idList = [];
 describe('test DELETE /api/todos/:id', () => {
@@ -22,6 +21,7 @@ describe('test DELETE /api/todos/:id', () => {
   after(async () => {
     await sequelize.truncate();
   });
+  
   it('returns response.body', async () => {
     // old
     const response = await requestHelper.request({
@@ -71,7 +71,6 @@ describe('test DELETE /api/todos/:id', () => {
  it( 'is completed?', async () => {
     const promises = idList.map((id) => {
       const endPoint = `${END_POINT_PREFIX}/${id}`;
-      endPoints.push(endPoint);
       return requestHelper.request({
         method: 'delete',
         endPoint,
